@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const bcrypt = require("bcrypt-nodejs");
 
 const database = {
 	users: [
@@ -19,6 +20,13 @@ const database = {
 			password: "spiderman",
 			entries: 0,
 			joined: new Date()
+		}
+	],
+	login: [
+		{
+			id: "987",
+			hash: "",
+			email: "hauhau@christian.com"
 		}
 	]
 }
@@ -44,9 +52,10 @@ app.post("/signin", (req,res) => {
 
 app.post("/register", (req,res) => {
 	//receive new user data in JSON
-	//create new user
-	//add user to database
 	const { email, name, password } = req.body;
+	//create new user
+	//hash user password
+	//add user to database
 	database.users.push({
 		id: "125",
 		name: name,
@@ -89,7 +98,6 @@ app.put("/image", (req,res) => {
 	if (!found) {
 		res.status(404).json("User not found");
 	}
-	
 });
 
 
