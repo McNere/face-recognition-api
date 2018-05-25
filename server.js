@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const bcrypt = require("bcrypt-nodejs");
+const cors = require("cors");
 
 const database = {
 	users: [
@@ -21,17 +22,11 @@ const database = {
 			entries: 0,
 			joined: new Date()
 		}
-	],
-	login: [
-		{
-			id: "987",
-			hash: "",
-			email: "hauhau@christian.com"
-		}
 	]
 }
 
 //MIDDLEWARE
+app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -44,7 +39,7 @@ app.post("/signin", (req,res) => {
 	//receive login data for user in JSON format
 	//verify user information
 	if (req.body.email === database.users[0].email && req.body.password === database.users[0].password) {
-		res.json("success");
+		res.json(database.users[0]);
 	} else {
 		res.status(400).json("Error logging in");
 	}
