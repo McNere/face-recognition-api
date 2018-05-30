@@ -6,6 +6,12 @@ const cors = require("cors");
 const dotenv = require("dotenv").config();
 const knex = require("knex")
 
+//CONTROLLERS
+const register = require("./controllers/register");
+const signin = require("./controllers/signin");
+const entries = require("./controllers/entries");
+const profile = require("./controllers/profile");
+
 const db = knex({
 	client: "pg",
 	connection: {
@@ -26,82 +32,13 @@ app.get("/", (req,res) => {
 	res.send(database.users);
 });
 
-app.post("/signin", (req,res) => {
-	//receive login data for user in JSON format
-	//verify user information
-	const { email, password } = req.body;
-	db.select("email", "hash")
-		.from("login")
-		.where("email", "=", email)
-		.then(data => {
-			const isValid = bcrypt.compareSync(password, data[0].hash);
-			if (isValid) {
-				return db.select("*")
-					.from("users")
-					.where("email", "=", email)
-					.then(user => {
-						res.json(user[0]);
-					})
-					.catch(err => res.status(400).json("Unable to get user"))
-			} else {
-				res.status(400).json("wrong credentials");
-			}
-		})
-		.catch(err => res.status(400).json("Something went wrong"));
-});
+app.post("/signin", (req,res) => { signin.handleSignin(req,res,db,bcrypt) });
 
-app.post("/register", (req,res) => {
-	const { email, name, password } = req.body;
-	const hash = bcrypt.hashSync(password);
-	db.transaction(trx => {
-		trx.insert({
-			hash: hash,
-			email: email
-		})
-		.into("login")
-		.returning("email")
-		.then(loginEmail => {
-			return trx("users")
-				.returning("*")
-				.insert({
-					email: loginEmail[0],
-					name: name,
-					joined: new Date()
-				})
-				.then(user => {
-					res.json(user[0]);
-				})
-		})
-		.then(trx.commit)
-		.catch(trx.rollback);
-	})
-	.catch(err => res.status(400).json("Unable to register"))
-});
+app.post("/register", (req,res) => { register.handleRegister(req,res,db,bcrypt) });
 
-app.get("/profile/:id", (req,res) => {
-	//find user by userId parameter
-	const { id } = req.params;
-	db.select("*")
-		.from("users")
-		.where({id: id})
-		.then(user => {
-			user.length ? res.json(user[0]) : res.status(400).json("User not found");
-		})
-		.catch(err => res.json("Something went wrong"));
-});
+app.get("/profile/:id", (req,res) => { profile.getProfile(req,res,db) });
 
-app.put("/image", (req,res) => {
-	//receive user data and find user
-	const { id } = req.body;
-	db("users")
-		.where("id", "=", id)
-		.increment("entries", 1)
-		.returning("entries")
-		.then(entries => {
-			entries.length ? res.json(entries[0]) : res.status(400).json("User not found");
-		})
-		.catch(err => res.status(400).json("Unable to get entries"))
-});
+app.put("/image", (req,res) => { entries.updateEntries(req,res,db) });
 
 
 
