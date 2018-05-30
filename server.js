@@ -40,6 +40,8 @@ app.get("/profile/:id", (req,res) => { profile.getProfile(req,res,db) });
 
 app.put("/image", (req,res) => { entries.updateEntries(req,res,db) });
 
+app.post("/imageurl", (req,res) => { entries.handleApiCall(req,res) })
+
 
 
 //LISTENER

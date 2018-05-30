@@ -2,6 +2,9 @@ const handleSignin = (req,res,db,bcrypt) => {
 	//receive login data for user in JSON format
 	//verify user information
 	const { email, password } = req.body;
+	if (!email || !password) {
+		return res.status(400).json("Invalid login");
+	}
 	db.select("email", "hash")
 		.from("login")
 		.where("email", "=", email)
@@ -16,7 +19,7 @@ const handleSignin = (req,res,db,bcrypt) => {
 					})
 					.catch(err => res.status(400).json("Unable to get user"))
 			} else {
-				res.status(400).json("wrong credentials");
+				res.status(400).json("Wrong credentials");
 			}
 		})
 		.catch(err => res.status(400).json("Something went wrong"));
