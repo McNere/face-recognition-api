@@ -40,11 +40,11 @@ app.get("/profile/:id", (req,res) => { profile.getProfile(req,res,db) });
 
 app.put("/image", (req,res) => { entries.updateEntries(req,res,db) });
 
-app.post("/imageurl", (req,res) => { entries.handleApiCall(req,res) })
+app.post("/imageurl", (req,res) => { entries.handleApiCall(req,res) });
 
 
 
 //LISTENER
-app.listen(3000, () => {
-	console.log("Server is running");
+app.listen(process.env.PORT, () => {
+	console.log(`Server is running on port ${process.env.PORT}`);
 });
