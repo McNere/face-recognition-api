@@ -15,8 +15,10 @@ const profile = require("./controllers/profile");
 const db = knex({
 	client: "pg",
 	connection: {
-		connectionString: process.env.DATABASE_URL,
-		ssl: true
+		host: "localhost",
+		user: process.env.DBUSER,
+		password: process.env.DBPW,
+		database: process.env.DBNAME
 	}
 });
 
@@ -43,6 +45,6 @@ app.post("/imageurl", (req,res) => { entries.handleApiCall(req,res) });
 
 
 //LISTENER
-app.listen(process.env.PORT, () => {
+app.listen(3000, () => {
 	console.log(`Server is running on port ${process.env.PORT}`);
 });
