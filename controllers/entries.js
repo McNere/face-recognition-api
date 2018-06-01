@@ -1,9 +1,11 @@
 const Clarifai = require("clarifai");
 
+//API configuration
 const app = new Clarifai.App({
 	apiKey: process.env.APIKEY
 })
 
+//API call for face detection
 const handleApiCall = (req,res) => {
 	app.models.predict(Clarifai.FACE_DETECT_MODEL, req.body.input)
 		.then(data => {
@@ -12,8 +14,8 @@ const handleApiCall = (req,res) => {
 		.catch(err => res.status(400).json("API error"))
 }
 
+//handling of URL submission
 const updateEntries = (req,res, db) => {
-	//receive user data and find user
 	const { id, faceCount, name, url } = req.body;
 	//checks if URL has already been submitted by user
 	db("submitted")

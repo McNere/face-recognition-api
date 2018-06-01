@@ -12,6 +12,7 @@ const signin = require("./controllers/signin");
 const entries = require("./controllers/entries");
 const profile = require("./controllers/profile");
 
+//database configuration
 const db = knex({
 	client: "pg",
 	connection: {
@@ -30,14 +31,19 @@ app.get("/", (req,res) => {
 	res.send("It's working");
 });
 
+//sign in route
 app.post("/signin", (req,res) => { signin.handleSignin(req,res,db,bcrypt) });
 
+//register new user route
 app.post("/register", (req,res) => { register.handleRegister(req,res,db,bcrypt) });
 
+//get userinfo route. not yet implemented in frontend
 app.get("/profile/:id", (req,res) => { profile.getProfile(req,res,db) });
 
+//route for handling URL submissions
 app.put("/image", (req,res) => { entries.updateEntries(req,res,db) });
 
+//route for face detection API call
 app.post("/imageurl", (req,res) => { entries.handleApiCall(req,res) });
 
 

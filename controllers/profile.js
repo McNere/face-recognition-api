@@ -1,3 +1,4 @@
+//fetches user information based on ID
 const getProfile = (req,res,db) => {
 	//find user by userId parameter
 	const { id } = req.params;
