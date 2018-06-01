@@ -15,10 +15,8 @@ const profile = require("./controllers/profile");
 const db = knex({
 	client: "pg",
 	connection: {
-		host: "localhost",
-		user: process.env.DBUSER,
-		password: process.env.DBPW,
-		database: process.env.DBNAME
+		connectionString: process.env.DATABASE_URL,
+		ssl: true
 	}
 });
 
