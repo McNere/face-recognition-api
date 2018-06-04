@@ -11,13 +11,16 @@ const register = require("./controllers/register");
 const signin = require("./controllers/signin");
 const entries = require("./controllers/entries");
 const profile = require("./controllers/profile");
+const scores = require("./controllers/scores");
 
 //database configuration
 const db = knex({
 	client: "pg",
 	connection: {
-		connectionString: process.env.DATABASE_URL,
-		ssl: true
+		host: process.env.IP,
+		user: process.env.DBUSER,
+		password: process.env.DBPW,
+		database: process.env.DBNAME
 	}
 });
 
@@ -45,6 +48,9 @@ app.put("/image", (req,res) => { entries.updateEntries(req,res,db) });
 
 //route for face detection API call
 app.post("/imageurl", (req,res) => { entries.handleApiCall(req,res) });
+
+//route for scoreboard
+app.get("/scores", (req,res) => { scores.getScores(req,res,db) });
 
 
 
