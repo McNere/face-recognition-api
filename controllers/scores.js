@@ -5,7 +5,7 @@ const getScores = (req,res,db) => {
 		.orderBy("entries", "desc")
 		.limit(10)
 		.then(scores => res.json(scores))
-		.catch(err => res.json("Bad request"))
+		.catch(err => res.status(400).json("Bad request"))
 }
 
 module.exports = {
