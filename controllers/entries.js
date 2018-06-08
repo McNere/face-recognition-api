@@ -41,7 +41,7 @@ const updateEntries = (req,res, db) => {
 					.catch(trx.rollback)
 			})
 		})
-		.then(result => result ? res.json(result[0].entries) : res.json(result))
+		.then(result => result ? res.json(result[0]) : res.json(null))
 		.catch(err => res.json("Something went wrong with the submission"));
 }
 
